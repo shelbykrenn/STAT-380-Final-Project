@@ -1,0 +1,92 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(mdsr)
+library(plyr)
+library(knitr)
+```
+
+```{r, message = FALSE, echo = FALSE}
+# Cleaning Data
+PetFinder <-
+  read.csv('test.csv')
+
+PetFinder$State <-
+  mapvalues(PetFinder$State, from = c("41324", "41325", '41326', '41327', '41336', '41367', '41401', '41415', '41332', '41335', '41330', '41380', '41345', '41342', '41361'), to = c("Melaka", "Kedah", 'Selangor', 'Pulau Pinang', 'Johor', 'Kelantan', 'Kuala Lumpur', 'Labuan', 'Negeri Sembilan', 'Pahang', 'Perak', 'Perlis', 'Sabah', 'Sarawak', 'Terengganu'))
+
+PetFinder$Type <-
+  mapvalues(PetFinder$Type, from = c('1', '2'), to = c('Dog', 'Cat'))
+
+PetFinder$Color1 <-
+  mapvalues(PetFinder$Color1, from = c('1', '2', '3', '4', '5', '6', '7'), to = c('Black', 'Brown', 'Golden', 'Yellow', 'Cream', 'Gray', 'White'))
+
+PetFinder$Color2 <-
+  mapvalues(PetFinder$Color2, from = c('1', '2', '3', '4', '5', '6', '7', '0'), to = c('Black', 'Brown', 'Golden', 'Yellow', 'Cream', 'Gray', 'White', 'NA'))
+
+PetFinder$Color3 <-
+  mapvalues(PetFinder$Color3, from = c('1', '2', '3', '4', '5', '6', '7', '0'), to = c('Black', 'Brown', 'Golden', 'Yellow', 'Cream', 'Gray', 'White', 'NA'))
+
+PetFinder$Breed1 <-
+  mapvalues(PetFinder$Breed1, from = c('1':'220'), to = c('Affenpinscher', 'Afghan Hound', 'Airedale Terrier', 'Akbash', 'Akita', 'Alaskan Malamute', 'American Bulldog', 'American Eskimo Dog', 'American Hairless Terrier', 'American Staffordshire Terrier', 'American Water Spaniel', 'Anatolian Shephard', 'Appenzell Mountain Dog', 'Australian Cattle Dog', 'Australian Kelpie', 'Australian Shephard', 'Australian Terrier', 'Basenji', 'Bassett Hound', 'Beagle','Bearded Collie', 'Beauceron', 'Bedlington Terrier', 'Belgian Shephard Dog Sheepdog', 'Belgian Shephard Laekenois', 'Belgian Shephard Malinois', 'Belgian Shephard Tervuren', 'Bermese Mountain Dog', 'Bichon Frise', 'Black and Tan Coonhound', 'Black Labrador Retriever', 'Black Mouth Cur', 'Black Russian Terrier', 'Bloodhound', 'Blue Lacy', 'Bluetick Coonhound', 'Boerboel', 'Bolognese', 'Border Collie', 'Border Terrier', 'Borzoi', 'Boston Terrier', 'Bouvier des Flanders', 'Boxer', 'Boykin Spaniel', 'Briard', 'Brittany Spaniel', 'Brussels Griffin', 'Bull Terrier', 'Bullmastiff', 'Cairn Terrier', 'Canaan Dog', 'Cane Corso Mastiff', 'Carolina Dog', 'Catahoula Leopard Dog', 'Cattle Dog', 'Caucasian Sheepdog', 'Cavalier King Charles Spaniel', 'Chesapeake Bay Retriever', 'Chihuahua', 'Chinese Crested Dog', 'Chinese Foo Dog', 'Chinook', 'Chocolate Labrador Retriever', 'Chow Chow', 'Cirneco dell Etna', 'Clumber Spaniel', 'Cockapoo', 'Cocker Spaniel', 'Collie', 'Coonhound', 'Corgi', 'Coton de Tulear', 'Curly-Coated Retriever', 'Daschund', 'Dalmatian', 'Dandi Dinmont Terrier', 'Doberman Pinscher', 'Dogo Argentino', 'Dogue de Bourdeaux', 'Dutch Shephard', 'English Bulldog', 'English Cocker Spaniel', 'English Coonhound', 'English Pointer', 'English Setter', 'English Shephard', 'English Springer Spaniel', 'English Toy Spaniel', 'Entlebucher', 'Eskimo Dog', 'Feist', 'Field Spaniel', 'Fila Brasileiro', 'Finnish Lapphund', 'Finnish Spitz', 'Flat-Coated Retriever', 'Fox Terrier', 'Foxhound', 'French Bulldog', 'Galgo Spanish Greyhound', 'German Pinscher', 'German Shephard Dog', 'German Shorthaired Pointer', 'German Spitz', 'German Wirehaired Pointer', 'Giant Schnauzer', 'Glen of Imaal Terrier', 'Golden Retriever', 'Gordon Setter', 'Great Dane', 'Great Pyrenees', 'Greater Swiss Mountain Dog', 'Greyhound', 'Harrier', 'Havanese', 'Hound', 'Hovawart', 'Husky', 'Ibizan Hound', 'Illyrian Sheepdog', 'Irish Setter', 'Irish Terrier', 'Irish Water Spaniel', 'Irish Wolfhound', 'Italian Greyhound', 'Italian Spinone', 'Jack Russell Terrier', 'Parson Russell Terrier', 'Japanese Chin', 'Jindo', 'Kai Dog', 'Karelian Bear Dog', 'Keeshond', 'Kerry Blue Terrier', 'Kishu', 'Klee Kai', 'Komondor', 'Kuvasz', 'Kyi Leo' , 'Labrador Retriever', 'Lakeland Terrier', 'Lancashire Heeler', 'Leonberger', 'Lhasa Apso', 'Lowchen', 'Maltese', 'Manchester Terrier', 'Maremma Sheepdog', 'Mastiff', 'McNab', 'Miniature Pinscher', 'Mountain Cur', 'Mountain Dog', 'Munsterlander', 'Neapolitan Mastiff', 'New Guinea Singing Dog', 'Newfoundland Dog', 'Norfolk Terrier', 'Norwegian Buhund', 'Norwegian Elkhound', 'Norwegian Lundehund', 'Norwich Terrier', 'Nova Scotia Duck-Tolling Retriever', 'Old English Sheepdog', 'Otterhound', 'Papillon', 'Patterdale Terrier', 'Pekingese', 'Peruvian Inca Orchid', 'Petit Bassett Griffon Vendeen', 'Pharaoh Hound', 'Pit Bull Terrier', 'Plott Hound', 'Podengo Portueso', 'Pointer', 'Polish Lowland Sheepdog', 'Pomeranian', 'Poodle', 'Portuguese Water Dog', 'Presa Canario', 'Pug' ,'Puli', 'Pumi', 'Rat Terrier', 'Redbone Coonhound', 'Retriever', 'Rhodesian Ridgeback' ,'Rottweiler', 'Saint Bernard', 'Saluki', 'Samoyed', 'Sarplaninac', 'Schipperke', 'Schnauzer', 'Scottish Deerhound', 'Scottish Terrier Scottie', 'Sealyham Terrier', 'Setter', 'Shar Pei', 'Sheep Dog', 'Shephard', 'Shetland Sheepdog Sheltie', 'Shiba Inu', 'Shih Tzu', 'Siberian Husky', 'Silky Terrier', 'Skye Terrier', 'Sloughi', 'Smooth Fox Terrier', 'South Russian Ovtcharka', 'Spaniel', 'Spitz', 'Staffordshire Bull Terrier','Standard Poodle', 'Sussex Spaniel', 'Swedish Valhund', 'Terrier', 'Thai Ridgeback', 'Tibetan Mastiff'))
+
+PetFinder$Breed1 <-
+  mapvalues(PetFinder$Breed1, from = c('221':'307'), to = c('Tibetan Spaniel', 'Tibetian Terrier', 'Tosa Inu', 'Toy Fox Terrier', 'Treeing Walker Coonhound', 'Vizsla', 'Weimaraner', 'Welsh Corgi', 'Welsh Springer Spaniel', 'Welsh Terrier', 'West Highland White Terrier Westie', 'Wheaten Terrier', 'Whippet', 'White German Shephard', 'Wire Fox Terrier', 'Wire-Haired Pointing Griffon', 'Wirehaired Terrier', 'Xoloitzcuintle', 'Yellow Labrador Retriever', 'Yorkshire Terrier Yorkie', 'Abyssinian', 'American Curl', 'American Shorthair', 'American Wirehair', 'Applehead Siamese', 'Balinese', 'Bengal', 'Birman', 'Bobtail', 'Bombay', 'British Shorthair', 'Burmese', 'Burmilla', 'Calico', 'Canadian Hairless', 'Chartreaux', 'Chausie', 'Chinchilla', 'Cornish Rex', 'Cymric', 'Devon Rex', 'Dilute Calico', 'Dilute Tortoiseshell', 'Domestic Long Hair', 'Domestic Medium Hair', 'Domestic Short Hair','Egyptian Mau', 'Exotic Shorthair', 'Extra-Toes Cat', 'Havana', 'Himalayan', 'Japanese Bobtail', 'Javenese', 'Korat', 'LaPerm', 'Maine Coon', 'Manx', 'Munchkin', 'Nebelung', 'Norwegian Forest Cat', 'Ocicat', 'Oriental Long Hair', 'Oriental Short Hair', 'Oriental Tabby', 'Persian', 'Pixie-Bob', 'Ragamuffin', 'Ragdoll', 'Russian Blue', 'Scottish Fold', 'Selkirk Rex', 'Siamese', 'Siberian', 'Silver', 'Singapura', 'Snowshoe', 'Somali', 'Sphynx', 'Tabby', 'Tiger', 'Tonkinese', 'Torbie', 'Tortoiseshell', 'Turkish Angora', 'Turkish Van', 'Tuxedo', 'Mixed Breed'))
+
+PetFinder$Breed2 <-
+  mapvalues(PetFinder$Breed2, from = c('0':'220'), to = c('NA', 'Affenpinscher', 'Afghan Hound', 'Airedale Terrier', 'Akbash', 'Akita', 'Alaskan Malamute', 'American Bulldog', 'American Eskimo Dog', 'American Hairless Terrier', 'American Staffordshire Terrier', 'American Water Spaniel', 'Anatolian Shephard', 'Appenzell Mountain Dog', 'Australian Cattle Dog', 'Australian Kelpie', 'Australian Shephard', 'Australian Terrier', 'Basenji', 'Bassett Hound', 'Beagle','Bearded Collie', 'Beauceron', 'Bedlington Terrier', 'Belgian Shephard Dog Sheepdog', 'Belgian Shephard Laekenois', 'Belgian Shephard Malinois', 'Belgian Shephard Tervuren', 'Bermese Mountain Dog', 'Bichon Frise', 'Black and Tan Coonhound', 'Black Labrador Retriever', 'Black Mouth Cur', 'Black Russian Terrier', 'Bloodhound', 'Blue Lacy', 'Bluetick Coonhound', 'Boerboel', 'Bolognese', 'Border Collie', 'Border Terrier', 'Borzoi', 'Boston Terrier', 'Bouvier des Flanders', 'Boxer', 'Boykin Spaniel', 'Briard', 'Brittany Spaniel', 'Brussels Griffin', 'Bull Terrier', 'Bullmastiff', 'Cairn Terrier', 'Canaan Dog', 'Cane Corso Mastiff', 'Carolina Dog', 'Catahoula Leopard Dog', 'Cattle Dog', 'Caucasian Sheepdog', 'Cavalier King Charles Spaniel', 'Chesapeake Bay Retriever', 'Chihuahua', 'Chinese Crested Dog', 'Chinese Foo Dog', 'Chinook', 'Chocolate Labrador Retriever', 'Chow Chow', 'Cirneco dell Etna', 'Clumber Spaniel', 'Cockapoo', 'Cocker Spaniel', 'Collie', 'Coonhound', 'Corgi', 'Coton de Tulear', 'Curly-Coated Retriever', 'Daschund', 'Dalmatian', 'Dandi Dinmont Terrier', 'Doberman Pinscher', 'Dogo Argentino', 'Dogue de Bourdeaux', 'Dutch Shephard', 'English Bulldog', 'English Cocker Spaniel', 'English Coonhound', 'English Pointer', 'English Setter', 'English Shephard', 'English Springer Spaniel', 'English Toy Spaniel', 'Entlebucher', 'Eskimo Dog', 'Feist', 'Field Spaniel', 'Fila Brasileiro', 'Finnish Lapphund', 'Finnish Spitz', 'Flat-Coated Retriever', 'Fox Terrier', 'Foxhound', 'French Bulldog', 'Galgo Spanish Greyhound', 'German Pinscher', 'German Shephard Dog', 'German Shorthaired Pointer', 'German Spitz', 'German Wirehaired Pointer', 'Giant Schnauzer', 'Glen of Imaal Terrier', 'Golden Retriever', 'Gordon Setter', 'Great Dane', 'Great Pyrenees', 'Greater Swiss Mountain Dog', 'Greyhound', 'Harrier', 'Havanese', 'Hound', 'Hovawart', 'Husky', 'Ibizan Hound', 'Illyrian Sheepdog', 'Irish Setter', 'Irish Terrier', 'Irish Water Spaniel', 'Irish Wolfhound', 'Italian Greyhound', 'Italian Spinone', 'Jack Russell Terrier', 'Parson Russell Terrier', 'Japanese Chin', 'Jindo', 'Kai Dog', 'Karelian Bear Dog', 'Keeshond', 'Kerry Blue Terrier', 'Kishu', 'Klee Kai', 'Komondor', 'Kuvasz', 'Kyi Leo' , 'Labrador Retriever', 'Lakeland Terrier', 'Lancashire Heeler', 'Leonberger', 'Lhasa Apso', 'Lowchen', 'Maltese', 'Manchester Terrier', 'Maremma Sheepdog', 'Mastiff', 'McNab', 'Miniature Pinscher', 'Mountain Cur', 'Mountain Dog', 'Munsterlander', 'Neapolitan Mastiff', 'New Guinea Singing Dog', 'Newfoundland Dog', 'Norfolk Terrier', 'Norwegian Buhund', 'Norwegian Elkhound', 'Norwegian Lundehund', 'Norwich Terrier', 'Nova Scotia Duck-Tolling Retriever', 'Old English Sheepdog', 'Otterhound', 'Papillon', 'Patterdale Terrier', 'Pekingese', 'Peruvian Inca Orchid', 'Petit Bassett Griffon Vendeen', 'Pharaoh Hound', 'Pit Bull Terrier', 'Plott Hound', 'Podengo Portueso', 'Pointer', 'Polish Lowland Sheepdog', 'Pomeranian', 'Poodle', 'Portuguese Water Dog', 'Presa Canario', 'Pug' ,'Puli', 'Pumi', 'Rat Terrier', 'Redbone Coonhound', 'Retriever', 'Rhodesian Ridgeback' ,'Rottweiler', 'Saint Bernard', 'Saluki', 'Samoyed', 'Sarplaninac', 'Schipperke', 'Schnauzer', 'Scottish Deerhound', 'Scottish Terrier Scottie', 'Sealyham Terrier', 'Setter', 'Shar Pei', 'Sheep Dog', 'Shephard', 'Shetland Sheepdog Sheltie', 'Shiba Inu', 'Shih Tzu', 'Siberian Husky', 'Silky Terrier', 'Skye Terrier', 'Sloughi', 'Smooth Fox Terrier', 'South Russian Ovtcharka', 'Spaniel', 'Spitz', 'Staffordshire Bull Terrier','Standard Poodle', 'Sussex Spaniel', 'Swedish Valhund', 'Terrier', 'Thai Ridgeback', 'Tibetan Mastiff'))
+
+PetFinder$Breed2 <-
+  mapvalues(PetFinder$Breed2, from = c('221':'307'), to = c('Tibetan Spaniel', 'Tibetian Terrier', 'Tosa Inu', 'Toy Fox Terrier', 'Treeing Walker Coonhound', 'Vizsla', 'Weimaraner', 'Welsh Corgi', 'Welsh Springer Spaniel', 'Welsh Terrier', 'West Highland White Terrier Westie', 'Wheaten Terrier', 'Whippet', 'White German Shephard', 'Wire Fox Terrier', 'Wire-Haired Pointing Griffon', 'Wirehaired Terrier', 'Xoloitzcuintle', 'Yellow Labrador Retriever', 'Yorkshire Terrier Yorkie', 'Abyssinian', 'American Curl', 'American Shorthair', 'American Wirehair', 'Applehead Siamese', 'Balinese', 'Bengal', 'Birman', 'Bobtail', 'Bombay', 'British Shorthair', 'Burmese', 'Burmilla', 'Calico', 'Canadian Hairless', 'Chartreaux', 'Chausie', 'Chinchilla', 'Cornish Rex', 'Cymric', 'Devon Rex', 'Dilute Calico', 'Dilute Tortoiseshell', 'Domestic Long Hair', 'Domestic Medium Hair', 'Domestic Short Hair','Egyptian Mau', 'Exotic Shorthair', 'Extra-Toes Cat', 'Havana', 'Himalayan', 'Japanese Bobtail', 'Javenese', 'Korat', 'LaPerm', 'Maine Coon', 'Manx', 'Munchkin', 'Nebelung', 'Norwegian Forest Cat', 'Ocicat', 'Oriental Long Hair', 'Oriental Short Hair', 'Oriental Tabby', 'Persian', 'Pixie-Bob', 'Ragamuffin', 'Ragdoll', 'Russian Blue', 'Scottish Fold', 'Selkirk Rex', 'Siamese', 'Siberian', 'Silver', 'Singapura', 'Snowshoe', 'Somali', 'Sphynx', 'Tabby', 'Tiger', 'Tonkinese', 'Torbie', 'Tortoiseshell', 'Turkish Angora', 'Turkish Van', 'Tuxedo', 'Mixed Breed'))
+
+PetFinder$Gender <-
+  mapvalues(PetFinder$Gender, from = c('1', '2', '3'), to = c('Male', 'Female', 'Mixed'))
+
+PetFinder$MaturitySize <-
+  mapvalues(PetFinder$MaturitySize, from = c('0':'4'), to = c('Not Specified', 'Small', 'Medium', 'Large', 'Extra Large'))
+
+PetFinder$FurLength <-
+  mapvalues(PetFinder$FurLength, from = c('0':'3'), to = c('Not Specified', 'Short', 'Medium', 'Long'))
+
+PetFinder$Vaccinated <-
+  mapvalues(PetFinder$Vaccinated, from = c('1', '2', '3'), to = c('Yes', 'No', 'Not Sure'))
+
+PetFinder$Dewormed <-
+  mapvalues(PetFinder$Dewormed, from = c('1', '2', '3'), to = c('Yes', 'No', 'Not Sure'))
+
+PetFinder$Sterilized <-
+  mapvalues(PetFinder$Sterilized, from = c('1', '2', '3'), to = c('Yes', 'No', 'Not Sure'))
+
+PetFinder$Health <-
+  mapvalues(PetFinder$Health, from = c('0':'3'), to = c('Not Specified', 'Healthy', 'Minor Injury', 'Serious Injury'))
+
+PetFinder$Description <-
+  NULL
+
+PetFinder$RescuerID <-
+  NULL
+
+PetFinder$PetID <-
+  NULL
+
+PetFinder$VideoAmt <-
+  NULL
+
+PetFinder$PhotoAmt <-
+  NULL
+```
+
+```{r}
+head(PetFinder)
+```
+
+```{r, fig.height = 3, fig.width = 11}
+PetFinder %>%
+  ggplot(aes(x = State)) +
+  geom_bar()
+```
+
