@@ -8,7 +8,7 @@ output:
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library(mdsr)
 library(plyr)
-library(knitr)
+library(rvest)
 ```
 
 ```{r, message = FALSE, echo = FALSE}
@@ -81,6 +81,22 @@ PetFinder$PhotoAmt <-
 ```
 
 ```{r}
+#Importing data
+url <-
+  'https://en.wikipedia.org/wiki/List_of_Malaysian_states_by_GDP'
+
+Malaysia <-
+  url %>%
+  read_html() %>%
+  html_nodes(xpath= '/html/body/div[3]/div[3]/div[4]/div/table[1]') %>%
+  html_table()
+
+Malaysia <-
+  Malaysia[[1]]
+```
+
+
+```{r}
 head(PetFinder)
 ```
 
@@ -89,4 +105,6 @@ PetFinder %>%
   ggplot(aes(x = State)) +
   geom_bar()
 ```
+
+
 

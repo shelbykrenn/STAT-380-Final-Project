@@ -124,6 +124,18 @@ $(document).ready(function () {
 </div>
 
 
+<pre class="r"><code>#Importing data
+url &lt;-
+  'https://en.wikipedia.org/wiki/List_of_Malaysian_states_by_GDP'
+
+Malaysia &lt;-
+  url %&gt;%
+  read_html() %&gt;%
+  html_nodes(xpath= '/html/body/div[3]/div[3]/div[4]/div/table[1]') %&gt;%
+  html_table()
+
+Malaysia &lt;-
+  Malaysia[[1]]</code></pre>
 <pre class="r"><code>head(PetFinder)</code></pre>
 <pre><code>##   Type      Name Age              Breed1   Breed2 Gender Color1 Color2
 ## 1  Dog     Puppy   2         Mixed Breed       NA   Male  Black     NA
