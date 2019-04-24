@@ -166,6 +166,7 @@ PetFinder <-
   mutate(Name = tolower(Name))
 Sentiments <-
   get_sentiments("afinn")
+
 ```
 
 
