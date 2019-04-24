@@ -9,6 +9,10 @@ output:
 library(mdsr)
 library(plyr)
 library(rvest)
+require(class)
+library(tidyr)
+library(tidytext)
+data("sentiments")
 ```
 
 ```{r, message = FALSE, echo = FALSE}
@@ -93,18 +97,77 @@ Malaysia <-
 
 Malaysia <-
   Malaysia[[1]]
+
+colnames(Malaysia)[1] <- "State"
 ```
 
-
-```{r}
-head(PetFinder)
-```
 
 ```{r, fig.height = 3, fig.width = 11}
 PetFinder %>%
   ggplot(aes(x = State)) +
   geom_bar()
 ```
+
+
+
+```{r}
+Joined <- 
+  left_join(PetFinder, Malaysia, by = "State") 
+colnames(Joined)[19] <- "GDP"
+Joined <-
+  Joined %>%
+  mutate(GDP = gsub(pattern = ",", replacement = "", x = GDP)) %>%
+  mutate(GDP = as.numeric(GDP))
+head(Joined)
+```
+
+
+```{r}
+mod_logit <- lm(Fee ~ GDP + Quantity,  data = Joined)
+```
+
+```{r}
+msummary(mod_logit)
+```
+
+
+```{r}
+res <- 100 
+fake_grid <- expand.grid(
+  GDP = seq(from = 280698, to = 5642, length.out = res), 
+  Quantity = seq(from = 20, to = 1, length.out = res))
+```
+
+```{r}
+pred_log <- predict(mod_logit, newdata = fake_grid, type = "response")
+plot <-
+  fake_grid %>%
+  mutate("Logistic"= pred_log) %>%
+  gather(key = "model", value = "y_hat", -GDP, -Quantity)
+ggplot(data = plot, aes(x = GDP, y = Quantity)) + 
+  geom_tile(aes(fill = y_hat), color = NA) +
+  geom_count(aes(fill = Fee), alpha = 0.9, data = Joined) +
+  scale_fill_gradient(low = "white", high = "dodgerblue") + 
+  scale_color_manual(values = c("black", "red")) + 
+  scale_size(range = c(0, 2)) + 
+  scale_x_continuous(expand = c(0.02,0)) + 
+  scale_y_continuous(expand = c(0.02,0)) +
+  ggtitle("Fee predicted by State GDP and Quanity")
+```
+
+
+With an R-squared value close to zero, we can see that there is little correlation between the fee as the response variable and quatity if that type of animal and GDP of the state the animal is from.  It may be benefical for Malaysia have lower prices in lower states or transfer more expensive/disirable dogs to richer states.  
+
+
+```{r}
+PetFinder <- 
+  PetFinder %>%
+  mutate(Name = as.character(Name)) %>%
+  mutate(Name = tolower(Name))
+Sentiments <-
+  get_sentiments("afinn")
+```
+
 
 
 
