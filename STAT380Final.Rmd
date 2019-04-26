@@ -170,5 +170,17 @@ Sentiments <-
 ```
 
 
+```{r}
+colnames(Sentiments)[1] <- "Name"
+colnames(PetFinder)[2] <- "Name"
 
+PetFinder_sentiment <- 
+  PetFinder %>%
+  select(Name) %>%
+  inner_join(Sentiments, PetFinder, by = 'Name') %>%
+  filter(score < 0)
+PetFinder_sentiment
+```
+
+There are 11 animals that have names with negative scores. Shelters may want to consider changing these names to help get these animals adpoted.
 
