@@ -168,23 +168,78 @@ There are 11 animals that have names with negative scores. Shelters may want to 
 # User-Defined Function
 
 BreedInfo <-
-  function(x, data = PetFinder) {
+  function(x, y, data = PetFinder) {
     subset <-
       PetFinder %>%
       subset(PetFinder$Breed1 == x)
+    subset_state <-
+      PetFinder %>%
+      subset(PetFinder$Breed1 == x & PetFinder$State == y)
+    type <-
+      subset$Type[[1]]
     n_adopted <-
       nrow(subset)
+    n_adopted_state <-
+      nrow(subset_state)
     avg_fee <-
       mean(subset$Fee)
+    avg_fee_state <-
+      mean(subset_state$Fee)
     values <-
-      c(n_adopted, as.integer(avg_fee))
+      c(type, x, n_adopted, as.integer(avg_fee), y, n_adopted_state, as.integer(avg_fee_state))
     words <-
-      c('Number Adopted', 'Average Adoption Fee')
+      c('Species', 'Breed', 'Number Adopted in Malaysia', 'Average Adoption Fee in Malaysia', 'State', 'Number Adopted in State', 'Average Adoption Fee in State')
     table <-
       do.call(rbind, Map(data.frame, Variable = words, Values = values))
     return(table)
   }
 
-BreedInfo('Mixed Breed')
+BreedInfo('Persian', 'Johor')
+```
+
+```{r}
+# Visualization using many variables
+
+less_half <-
+  PetFinder %>%
+  subset(PetFinder$Age <= 6)
+
+half_to_one <-
+  PetFinder %>%
+  subset(PetFinder$Age > 7 & PetFinder$Age <= 12)
+
+one_to_three <-
+  PetFinder %>%
+  subset(PetFinder$Age > 13 & PetFinder$Age <= 36)
+
+three_to_six <-
+  PetFinder %>%
+  subset(PetFinder$Age > 37 & PetFinder$Age <= 72)
+
+six_to_nine <-
+  PetFinder %>%
+  subset(PetFinder$Age > 73 & PetFinder$Age <= 108)
+
+nine_to_twelve <-
+  PetFinder %>%
+  subset(PetFinder$Age > 109 & PetFinder$Age <= 144)
+
+twelve_plus <-
+  PetFinder %>%
+  subset(PetFinder$Age > 145)
+
+ggplot(data = PetFinder) +
+  geom_bar(data = less_half, aes(x = Color1), fill = 'lightblue') +
+  geom_bar(data = half_to_one, aes(x = Color1), fill = 'lightpink') +
+  geom_bar(data = one_to_three, aes(x = Color1), fill = 'lightgray') +
+  geom_bar(data = three_to_six, aes(x = Color1), fill = 'lightgreen') +
+  geom_bar(data = six_to_nine, aes(x = Color1), fill = 'white') +
+  geom_bar(data = nine_to_twelve, aes(x = Color1), fill = 'blue') +
+  geom_bar(data = twelve_plus, aes(x = Color1), fill = 'red') +
+  facet_grid(~ Type) +
+  ggtitle('Likelihood of Being Adopted based on Type, Coat Color, and Age') +
+  xlab('Coat Color') +
+  ylab('Number of Adoptions')
+
 ```
 
