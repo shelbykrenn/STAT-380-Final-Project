@@ -6,6 +6,7 @@ output:
 ---
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
+#Load libraries
 library(mdsr)
 library(plyr)
 library(rvest)
@@ -16,6 +17,7 @@ data("sentiments")
 ```
 
 ```{r, message = FALSE, echo = FALSE}
+
 # Cleaning Data
 PetFinder <-
   read.csv('test.csv')
@@ -83,10 +85,8 @@ colnames(Malaysia)[1] <- "State"
 PetFinder %>%
   ggplot(aes(x = State)) +
   geom_bar()
-<<<<<<< HEAD
 ```
 =======
-```
 
 
 
@@ -118,7 +118,7 @@ fake_grid <- expand.grid(
   Quantity = seq(from = 20, to = 1, length.out = res))
 ```
 
-```{r}
+```{r, warning = FALSE}
 pred_log <- predict(mod_logit, newdata = fake_grid, type = "response")
 plot <-
   fake_grid %>%
@@ -139,7 +139,7 @@ ggplot(data = plot, aes(x = GDP, y = Quantity)) +
 With an R-squared value close to zero, we can see that there is little correlation between the fee as the response variable and quatity if that type of animal and GDP of the state the animal is from.  It may be benefical for Malaysia have lower prices in lower states or transfer more expensive/disirable dogs to richer states.  
 
 
-```{r}
+```{r, warning = FALSE}
 PetFinder <- 
   PetFinder %>%
   mutate(Name = as.character(Name)) %>%
@@ -164,4 +164,27 @@ PetFinder_sentiment
 
 There are 11 animals that have names with negative scores. Shelters may want to consider changing these names to help get these animals adpoted.
 
->>>>>>> 2c0774671613d1611f2feab976365ffb01a42983
+```{r}
+# User-Defined Function
+
+BreedInfo <-
+  function(x, data = PetFinder) {
+    subset <-
+      PetFinder %>%
+      subset(PetFinder$Breed1 == x)
+    n_adopted <-
+      nrow(subset)
+    avg_fee <-
+      mean(subset$Fee)
+    values <-
+      c(n_adopted, as.integer(avg_fee))
+    words <-
+      c('Number Adopted', 'Average Adoption Fee')
+    table <-
+      do.call(rbind, Map(data.frame, Variable = words, Values = values))
+    return(table)
+  }
+
+BreedInfo('Mixed Breed')
+```
+
