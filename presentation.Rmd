@@ -1,6 +1,6 @@
 ---
 title: "Stat 380 Presentation"
-output: ioslides_presentation
+output: slidy_presentation
 ---
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library(mdsr)
@@ -118,7 +118,6 @@ colnames(PetFinder)[2] <- "Name"
 
 #Results/Conclusions
 ```{r}
-
 PetFinder_sentiment <- 
   PetFinder %>%
   select(Name) %>%
@@ -127,4 +126,4 @@ PetFinder_sentiment <-
 PetFinder_sentiment
 ```
 
-+There are 11 animals that have names with negative scores. Shelters may want to consider changing these names to help get these animals adpoted.
++ There are 11 animals that have names with negative scores. Shelters may want to consider changing these names to help get these animals adpoted.
