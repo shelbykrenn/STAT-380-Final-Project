@@ -1,10 +1,7 @@
 ---
-output:
-  html_document: default
-  pdf_document: default
-  word_document: default
+title: "Stat 380 Presentation"
+output: ioslides_presentation
 ---
-
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library(mdsr)
 library(plyr)
@@ -84,80 +81,28 @@ PetFinder$PhotoAmt <-
   NULL
 ```
 
-```{r}
-#Importing data
-url <-
-  'https://en.wikipedia.org/wiki/List_of_Malaysian_states_by_GDP'
+# Motivation
 
-Malaysia <-
-  url %>%
-  read_html() %>%
-  html_nodes(xpath= '/html/body/div[3]/div[3]/div[4]/div/table[1]') %>%
-  html_table()
++ helping animals get adobted from Maylasian shelters 
 
-Malaysia <-
-  Malaysia[[1]]
++ more animals needed adobted 
 
-colnames(Malaysia)[1] <- "State"
-```
++ used data to finds ways shelters could help dogs get adopted 
 
+# Methods
 
-```{r, fig.height = 3, fig.width = 11}
-PetFinder %>%
-  ggplot(aes(x = State)) +
-  geom_bar()
-```
++ Main data source: each case was a different animal and variables included characterisics about that animal ex. breed, name, color, location
 
++ Malaysia GDP: look at economy is different location to analyze fees for animals  
 
++ Sentiments: looks at words and gives a sentiment score 
+# Obstacle
 
-```{r}
-Joined <- 
-  left_join(PetFinder, Malaysia, by = "State") 
-colnames(Joined)[19] <- "GDP"
-Joined <-
-  Joined %>%
-  mutate(GDP = gsub(pattern = ",", replacement = "", x = GDP)) %>%
-  mutate(GDP = as.numeric(GDP))
-head(Joined)
-```
++ We are not experts on the medical proceedures  
 
++ We could only make recommedations and create a visual representation of how many animals had undergone these proceedures.  
 
-```{r}
-mod_logit <- lm(Fee ~ GDP + Quantity,  data = Joined)
-```
-
-```{r}
-msummary(mod_logit)
-```
-
-
-```{r}
-res <- 100 
-fake_grid <- expand.grid(
-  GDP = seq(from = 280698, to = 5642, length.out = res), 
-  Quantity = seq(from = 20, to = 1, length.out = res))
-```
-
-```{r}
-pred_log <- predict(mod_logit, newdata = fake_grid, type = "response")
-plot <-
-  fake_grid %>%
-  mutate("Logistic"= pred_log) %>%
-  gather(key = "model", value = "y_hat", -GDP, -Quantity)
-ggplot(data = plot, aes(x = GDP, y = Quantity)) + 
-  geom_tile(aes(fill = y_hat), color = NA) +
-  geom_count(aes(fill = Fee), alpha = 0.9, data = Joined) +
-  scale_fill_gradient(low = "white", high = "dodgerblue") + 
-  scale_color_manual(values = c("black", "red")) + 
-  scale_size(range = c(0, 2)) + 
-  scale_x_continuous(expand = c(0.02,0)) + 
-  scale_y_continuous(expand = c(0.02,0)) +
-  ggtitle("Fee predicted by State GDP and Quanity")
-```
-
-
-With an R-squared value close to zero, we can see that there is little correlation between the fee as the response variable and quatity if that type of animal and GDP of the state the animal is from.  It may be benefical for Malaysia have lower prices in lower states or transfer more expensive/disirable dogs to richer states.  
-
+#Results/Conclusions
 
 ```{r}
 PetFinder <- 
@@ -166,13 +111,13 @@ PetFinder <-
   mutate(Name = tolower(Name))
 Sentiments <-
   get_sentiments("afinn")
-
-```
-
-
-```{r}
 colnames(Sentiments)[1] <- "Name"
 colnames(PetFinder)[2] <- "Name"
+```
++ got Finder and Sentiments data ready to join
+
+#Results/Conclusions
+```{r}
 
 PetFinder_sentiment <- 
   PetFinder %>%
@@ -182,30 +127,4 @@ PetFinder_sentiment <-
 PetFinder_sentiment
 ```
 
-There are 11 animals that have names with negative scores. Negative scores indicate that the animals have names with words that have a bad sentiment.  People may not want to adpot animals that have names with negative sentiments.  Shelters may want to consider changing these names to help get these animals adpoted.  In addition they could look to give them names that have positive sentiment.  
-
-
-```{r}
-PetFinderFit <- 
-  Joined %>%
-  mutate(fit = ifelse((Vaccinated == 'Yes') & (Dewormed == 'Yes'), 
-                      TRUE, FALSE)) %>%
-  mutate(fit = ifelse((Sterilized == 'Yes'), TRUE, FALSE))
-head(PetFinderFit)
-```
-
-
-```{r}
-Tally <- tally(~ fit, data = PetFinderFit)
-Tally
-```
-
-
-```{r}
-ggplot(as.data.frame(Tally), aes(x = fit, y = Freq)) + 
-  geom_bar(stat = "identity") + 
-  ggtitle("Animals that Have Certainly Been Steralized, Dewormed, and Vaccinated")
-```
-
-
-Most animals are for sure not vaccinated, dewormed, and steralized.  Over 3 times as many animals do not for sure have these proceedures as have these proceedures. It may be especially useful to look at steralization because unsteralized animals may produce more animals.  This would make it more difficult for animals to get adopted.  While it would cost money to perform these proceedures, it would help get the animals adpoted.  
++There are 11 animals that have names with negative scores. Shelters may want to consider changing these names to help get these animals adpoted.
