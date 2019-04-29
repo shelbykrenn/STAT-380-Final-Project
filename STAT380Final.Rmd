@@ -182,5 +182,30 @@ PetFinder_sentiment <-
 PetFinder_sentiment
 ```
 
-There are 11 animals that have names with negative scores. Shelters may want to consider changing these names to help get these animals adpoted.
+There are 11 animals that have names with negative scores. Negative scores indicate that the animals have names with words that have a bad sentiment.  People may not want to adpot animals that have names with negative sentiments.  Shelters may want to consider changing these names to help get these animals adpoted.  In addition they could look to give them names that have positive sentiment.  
 
+
+```{r}
+PetFinderFit <- 
+  Joined %>%
+  mutate(fit = ifelse((Vaccinated == 'Yes') & (Dewormed == 'Yes'), 
+                      TRUE, FALSE)) %>%
+  mutate(fit = ifelse((Sterilized == 'Yes'), TRUE, FALSE))
+head(PetFinderFit)
+```
+
+
+```{r}
+Tally <- tally(~ fit, data = PetFinderFit)
+Tally
+```
+
+
+```{r}
+ggplot(as.data.frame(Tally), aes(x = fit, y = Freq)) + 
+  geom_bar(stat = "identity") + 
+  ggtitle("Animals that Have Certainly Been Steralized, Dewormed, and Vaccinated")
+```
+
+
+Most dogs are for sure not vaccinated, dewormed, and steralized (76.6%).  While it would cost money to perform these proceedures, it would help get the animals adpoted.
