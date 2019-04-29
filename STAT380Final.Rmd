@@ -200,6 +200,21 @@ Tally <- tally(~ fit, data = PetFinderFit)
 Tally
 ```
 
+```{r}
+3023/(925 + 3023)
+```
+
+
+```{r}
+Tally <- tally(~ Sterilized, data = PetFinderFit)
+Tally
+```
+
+```{r}
+  2535 / (488 + 925 + 2535)
+```
+
+
 
 ```{r}
 ggplot(as.data.frame(Tally), aes(x = fit, y = Freq)) + 
@@ -208,4 +223,4 @@ ggplot(as.data.frame(Tally), aes(x = fit, y = Freq)) +
 ```
 
 
-Most animals are for sure not vaccinated, dewormed, and steralized.  Over 3 times as many animals do not for sure have these proceedures as have these proceedures. It may be especially useful to look at steralization because unsteralized animals may produce more animals.  This would make it more difficult for animals to get adopted.  While it would cost money to perform these proceedures, it would help get the animals adpoted.  
+Most animals are for sure not vaccinated, dewormed, and steralized (76%).  Over 3 times as many animals do not for sure have these proceedures as have these proceedures. It may be especially useful to look at steralization because unsteralized animals may produce more animals.  Most animals are not for sure not steralized (64%).  This would make it more difficult for older animals to get adopted.  While it would cost money to perform these proceedures, it would help get the animals adpoted.  
