@@ -114,7 +114,7 @@ Sentiments <-
 colnames(Sentiments)[1] <- "Name"
 colnames(PetFinder)[2] <- "Name"
 ```
-+ got Finder and Sentiments data ready to join
++ Finder and Sentiments data ready to join
 
 #Results/Conclusions
 ```{r}
