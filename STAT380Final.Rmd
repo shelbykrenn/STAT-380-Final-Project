@@ -14,6 +14,8 @@ require(class)
 library(tidyr)
 library(tidytext)
 data("sentiments")
+library(ape)
+library(mclust)
 ```
 
 ```{r, message = FALSE, echo = FALSE}
@@ -229,13 +231,13 @@ twelve_plus <-
   subset(PetFinder$Age > 145)
 
 ggplot(data = PetFinder) +
-  geom_bar(data = less_half, aes(x = Color1), fill = 'lightblue') +
-  geom_bar(data = half_to_one, aes(x = Color1), fill = 'lightpink') +
-  geom_bar(data = one_to_three, aes(x = Color1), fill = 'lightgray') +
-  geom_bar(data = three_to_six, aes(x = Color1), fill = 'lightgreen') +
-  geom_bar(data = six_to_nine, aes(x = Color1), fill = 'white') +
-  geom_bar(data = nine_to_twelve, aes(x = Color1), fill = 'blue') +
-  geom_bar(data = twelve_plus, aes(x = Color1), fill = 'red') +
+  geom_bar(data = less_half, aes(x = Color1), fill = 'tomato1') +
+  geom_bar(data = half_to_one, aes(x = Color1), fill = 'tomato2') +
+  geom_bar(data = one_to_three, aes(x = Color1), fill = 'tomato3') +
+  geom_bar(data = three_to_six, aes(x = Color1), fill = 'firebrick3') +
+  geom_bar(data = six_to_nine, aes(x = Color1), fill = 'firebrick4') +
+  geom_bar(data = nine_to_twelve, aes(x = Color1), fill = 'sienna') +
+  geom_bar(data = twelve_plus, aes(x = Color1), fill = 'brown') +
   facet_grid(~ Type) +
   ggtitle('Likelihood of Being Adopted based on Type, Coat Color, and Age') +
   xlab('Coat Color') +
@@ -243,3 +245,54 @@ ggplot(data = PetFinder) +
 
 ```
 
+There is an obvious preference for dark colored, younger animals when it comes to adoption in Malaysia. Because there is no way to manipulate an animals' color or age, this could better illustrate the need to better market the availability of these animals at adoption sites. 
+
+```{r, fig.width = 8}
+# Third visualization
+
+
+```
+
+```{r}
+# Simulation
+avg_age <-
+  mean(PetFinder)
+
+set.seed(1976)
+
+gen_samp <-
+  function(true_mean, true_sd, age = 12, delta = 12, id = 1) {
+    sample <-
+      rep(true_mean, age) +
+      rnorm(age, mean = delta * (1:age), sd = true_sd)
+    return(data.frame(adoptions = sample, age_month = as.factor(1:age), 
+                      id = id))
+  }
+
+age_true <-
+  12
+
+age_se <-
+  65
+
+n_sims <-
+  3
+
+params <-
+  data.frame(sd = c(0, rep(age_se, n_sims)), id = c('Truth', paste('Sample', 1:n_sims)))
+
+df <-
+  params %>%
+  group_by(id) %>%
+  do(gen_samp(true_mean = age_true, true_sd = .$sd, id = .$id))
+
+df %>%
+  ggplot(aes(x = age_month, y = adoptions)) +
+  geom_bar(stat = 'identity') +
+  facet_wrap(~ id) +
+  xlab('Age (in months)') +
+  ylab('Number of Adoptions (in hundreds)') +
+  ggtitle('Simulation of number of adoptions occuring in animals under one year')
+```
+
+A simulation was performed to determine the expected adoption rates for animals under 12 months of age. Because this is the promary age group to be adopted, used in conjunction with the preceeding visualization, the expected times when these adoption rates are estimated to be low, would be the optimal time for the shelters to further advertise their less desired animals. 
