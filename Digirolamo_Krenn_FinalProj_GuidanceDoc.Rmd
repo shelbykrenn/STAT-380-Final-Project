@@ -18,7 +18,7 @@ output: html_notebook
 
 (A) .Rmd Line number(s) for join operation: 
 
-
+**Lines 95-103**
 
 ### Data Wrangling (5 of 6 required)
 
@@ -26,21 +26,23 @@ output: html_notebook
 
 (A) .Rmd Line number(s) for an example of general purpose data wrangling: 
 
-
-(B) .Rmd Line number(s) for a spread & gather (or equivalent): 
-
+**Lines 70-82**
 
 (C) .Rmd Line number(s) for use of regular expressions: 
 
+**Line 101**
 
 (D) .Rmd Line number(s) for use of user-defined functions: 
 
+**Lines 169-200**
 
 (E) .Rmd Line number(s) for use of loops and/or control flow: 
 
 
+
 (F) .Rmd Line number(s) for use of vectorized functions: 
 
+**Lines 190-193**
 
 ### Data Visualization (all 4 required)
 
@@ -48,50 +50,35 @@ output: html_notebook
 
 (A) .Rmd Line number(s) for visualization with layered data from distinct data structures--e.g., a `geom` that plots data from a secondary data frame: 
 
+**Lines 124-137**
 
 (B) .Rmd Line number(s) for visualization displaying many--3 or more--variables (A, B, C, & D must be four **different** plots): 
 
+**Lines 204-246**
 
 (C) .Rmd Line number(s) for a third visualization: 
 
+**Lines 87-89**
 
 (D) .Rmd Line number(s) for a third visualization: 
 
-
+**Lines 252-256**
 
 
 ### Data Analysis (3 of 5 required)
 
 *Description: Clear demonstration of proficiency should include proper use of 3 out of the following 4 topics from class: (+) statistical modeling/supervised learning (+) unsupervised learning (+) user-defined simulations (+) analysis of text data (+) R tools for "big data"*
 
-(A) .Rmd Line number(s) for statistical modeling/supervised learning:  
+(A) .Rmd Line number(s) for statistical modeling/supervised learning: 
 
-
-(B) .Rmd Line number(s) for unsupervised learning: 
+**Lines 107-120**
 
 
 (C) .Rmd Line number(s) for user-defined simulation(s): 
 
+**Lines 262-300**
+
 
 (D) .Rmd Line number(s) for analysis of text data: 
 
-
-(E) .Rmd Line number(s) for R tools for "big data": 
-
-
-
-
-### Miscelaneous (Nothing for you to report in this Guidance Document)
-
-- *Overall GitHub contributions* will be verified upon the due date using the "contributors" page in your project Repo.  (Nothing to report in Guidance Document)
-
-- *Overall Reproducibility of analysis* will be verified upon the due date by cloning your project Repo and independently executing your analysis
-
-- *Overall STAT 380 for social good* will be verified based on the subject of your final project submission
-
-- *Code quality* will be verified based on alignment to the STAT 380 R style guide
-
-- *Narrative quality* will be evaluated based on the written descriptions of your analysis, motivation, reasoning for each step, and conclusions in the final project report submission
-
-- *Extra credit* will be awarded if the final project report is submitted to Canvas as a URL to a functioning website hosting your analysis (not the URL of the GitHub Repo itself).
-
+**Lines 145-164**
