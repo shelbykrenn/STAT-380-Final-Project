@@ -167,6 +167,27 @@ PetFinder_sentiment
 There are 11 animals that have names with negative scores. Shelters may want to consider changing these names to help get these animals adpoted.
 
 ```{r}
+PetFinderFit <- 
+  Joined %>%
+  mutate(fit = ifelse((Vaccinated == 'Yes') & (Dewormed == 'Yes'), TRUE, FALSE)) %>%
+  mutate(fit = ifelse((Sterilized == 'Yes'), TRUE, FALSE))
+head(PetFinderFit)
+```
+
+
+```{r}
+Tally <- tally(~ fit, data = PetFinderFit)
+Tally
+```
+
+```{r}
+ggplot(as.data.frame(Tally), aes(x = fit, y = Freq)) + 
+  geom_bar(stat = "identity") + 
+  ggtitle('Animals that Have Certainly Been Steralized, Dewormed, and Vaccinated')
+```
+
+
+```{r}
 # User-Defined Function
 
 BreedInfo <-
