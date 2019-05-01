@@ -197,6 +197,7 @@ BreedInfo <-
   }
 
 BreedInfo('Persian', 'Johor')
+BreedInfo('Boxer', 'Selangor')
 ```
 
 ```{r}
@@ -247,11 +248,15 @@ ggplot(data = PetFinder) +
 
 There is an obvious preference for dark colored, younger animals when it comes to adoption in Malaysia. Because there is no way to manipulate an animals' color or age, this could better illustrate the need to better market the availability of these animals at adoption sites. 
 
-```{r, fig.width = 8}
+```{r}
 # Third visualization
 
-
+ggplot(data = PetFinder) +
+  geom_point(aes(x = Age, y = Fee, color = Gender, shape = MaturitySize)) +
+  facet_grid(Gender ~ Type)
 ```
+
+When examining Fees in comparison to characteristics of the animals, there is a slight trend when it comes to Age, as discussed previously, but in regards to Gender, Species, and Size, there does not seem to be any strongly preffered factor. Because of this, when Malaysian shelters are advertising and advocating for animals other than the strongly preferred, there should be a very similar distribution amoungst all of them adopted. 
 
 ```{r}
 # Simulation
@@ -273,7 +278,7 @@ age_true <-
   12
 
 age_se <-
-  65
+  25
 
 n_sims <-
   3
