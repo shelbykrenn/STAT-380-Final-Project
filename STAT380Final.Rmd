@@ -164,50 +164,8 @@ PetFinder_sentiment <-
 PetFinder_sentiment
 ```
 
-There are 11 animals that have names with negative scores. Negative scores indicate that the animals have names with words that have a bad sentiment.  People may not want to adpot animals that have names with negative sentiments.  Shelters may want to consider changing these names to help get these animals adpoted.  In addition they could look to give them names that have positive sentiment.  
+There are 11 animals that have names with negative scores. Shelters may want to consider changing these names to help get these animals adpoted.
 
-<<<<<<< HEAD
-
-```{r}
-PetFinderFit <- 
-  Joined %>%
-  mutate(fit = ifelse((Vaccinated == 'Yes') & (Dewormed == 'Yes'), 
-                      TRUE, FALSE)) %>%
-  mutate(fit = ifelse((Sterilized == 'Yes'), TRUE, FALSE))
-head(PetFinderFit)
-```
-
-
-```{r}
-Tally <- tally(~ fit, data = PetFinderFit)
-Tally
-```
-
-```{r}
-3023/(925 + 3023)
-```
-
-
-```{r}
-Tally <- tally(~ Sterilized, data = PetFinderFit)
-Tally
-```
-
-```{r}
-  2535 / (488 + 925 + 2535)
-```
-
-
-
-```{r}
-ggplot(as.data.frame(Tally), aes(x = fit, y = Freq)) + 
-  geom_bar(stat = "identity") + 
-  ggtitle("Animals that Have Certainly Been Steralized, Dewormed, and Vaccinated")
-```
-
-
-Most animals are for sure not vaccinated, dewormed, and steralized (76%).  Over 3 times as many animals do not for sure have these proceedures as have these proceedures. It may be especially useful to look at steralization because unsteralized animals may produce more animals.  Most animals are not for sure not steralized (64%).  This would make it more difficult for older animals to get adopted.  While it would cost money to perform these proceedures, it would help get the animals adpoted.  
-=======
 ```{r}
 # User-Defined Function
 
@@ -294,11 +252,24 @@ There is an obvious preference for dark colored, younger animals when it comes t
 # Third visualization
 
 ggplot(data = PetFinder) +
-  geom_point(aes(x = Age, y = Fee, color = Gender, shape = MaturitySize)) +
-  facet_grid(Gender ~ Type)
+  geom_point(aes(x = Age, y = Fee, color = Gender, shape = MaturitySize), alpha = 0.7) +
+  facet_grid(Vaccinated ~ Type)
 ```
 
-When examining Fees in comparison to characteristics of the animals, there is a slight trend when it comes to Age, as discussed previously, but in regards to Gender, Species, and Size, there does not seem to be any strongly preffered factor. Because of this, when Malaysian shelters are advertising and advocating for animals other than the strongly preferred, there should be a very similar distribution amoungst all of them adopted. 
+When examining fee in comparison to whether or not the animal has been vaccinated, there does not seem to be any apparent price differential that is dependent on whether or not the animal was vaccinated. There is, however, a decently heavier preference for animals who are vaccinated regardless of price or age. This is also true for whether or not the animal is sterilized or dewormed, as shown below. 
+
+```{r}
+ggplot(data = PetFinder) +
+  geom_point(aes(x = Age, y = Fee, color = Gender, shape = MaturitySize), alpha = 0.7) +
+  facet_grid(Sterilized ~ Type)
+
+ggplot(data = PetFinder) +
+  geom_point(aes(x = Age, y = Fee, color = Gender, shape = MaturitySize), alpha = 0.7) +
+  facet_grid(Dewormed ~ Type)
+```
+
+According to these findings, though prices and any preferences linked to that will not be changed, vaccinating, sterilizing, and / or deworming the animals will most definitely raise the adoption rates.
+
 
 ```{r}
 # Simulation
@@ -343,4 +314,3 @@ df %>%
 ```
 
 A simulation was performed to determine the expected adoption rates for animals under 12 months of age. Because this is the promary age group to be adopted, used in conjunction with the preceeding visualization, the expected times when these adoption rates are estimated to be low, would be the optimal time for the shelters to further advertise their less desired animals. 
->>>>>>> 90279c1944b522f09195b6f61b8f7aa16e48864f

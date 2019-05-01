@@ -85,7 +85,7 @@ PetFinder$PhotoAmt <-
 
 + helping animals get adobted from Maylasian shelters 
 
-+ more animals needed adobted 
++ more animals needed adopted 
 
 + used data to finds ways shelters could help dogs get adopted 
 
@@ -127,3 +127,20 @@ PetFinder_sentiment
 ```
 
 + There are 11 animals that have names with negative scores. Shelters may want to consider changing these names to help get these animals adpoted.
+
+#Results / Conculsions
+```{r}
+ggplot(data = PetFinder) +
+  geom_point(aes(x = Age, y = Fee, color = Gender, shape = MaturitySize), alpha = 0.7) +
+  facet_grid(Vaccinated ~ Type)
+
+ggplot(data = PetFinder) +
+  geom_point(aes(x = Age, y = Fee, color = Gender, shape = MaturitySize), alpha = 0.7) +
+  facet_grid(Sterilized ~ Type)
+
+ggplot(data = PetFinder) +
+  geom_point(aes(x = Age, y = Fee, color = Gender, shape = MaturitySize), alpha = 0.7) +
+  facet_grid(Dewormed ~ Type)
+```
+
++ Regardless of age or price, there seems to be a stronger preference for animals who have been sterilized, vaccinated, and / or dewormed.
